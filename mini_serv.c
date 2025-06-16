@@ -44,14 +44,14 @@ int	main(int ac, char **av)
 		err("Wrong number of arguments");
 	struct sockaddr_in serveraddr;
 	socklen_t len = sizeof(struct sockaddr);
-	int serverfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (serverfd == -1)
+	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockfd == -1)
 		err(NULL);
 
-	maxfd = serverfd;
+	maxfd = sockfd;
 
 	FD_ZERO(&current);
-	FD_SET(serverfd, &current);
+	FD_SET(sockfd, &current);
 
 	bzero(clients, sizeof(clients));
 	bzero(&serveraddr, sizeof(serveraddr));
@@ -60,7 +60,7 @@ int	main(int ac, char **av)
 	serveraddr.sin_addr.s_addr = htonl(2130706433);
 	serveraddr.sin_port = htons(atoi(av[1]));
 
-	if (bind(serverfd, (const struct sockaddr *)&serveraddr, sizeof(serveraddr)) == -1 || listen(serverfd, 100) == -1)
+	if (bind(sockfd, (const struct sockaddr *)&serveraddr, sizeof(serveraddr)) == -1 || listen(sockfd, 100) == -1)
 		err(NULL);
 	while (1)
 	{
@@ -71,7 +71,7 @@ int	main(int ac, char **av)
 		{
 			if (FD_ISSET(fd, &read_set))
 			{
-				if (serverfd == fd)
+				if (sockfd == fd)
 				{
 					int clientfd = accept(fd, (struct sockaddr *)&serveraddr, &len);
 					if (clientfd == -1)
