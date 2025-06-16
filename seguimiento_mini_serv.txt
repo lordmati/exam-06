@@ -1,0 +1,35 @@
+1º Copiar todo el main que nos dan.
+2º Reemplazar las librerias 1º y 4º.
+3º Crear la estructura s_client con int fd, y char msg[3700000].
+4º Crear variable t_client clients[2048].
+5º Declarar variables, fd_set read_set, write_set, current.
+6º Crear variable int maxfd = 0, gid = 0;
+7º Crear variable char send_buffer[400000], recv_buffer[400000].
+8º Crear funcion void err.
+9º Crear funcion void send_to_all(int except).
+	-FD_ISSET(fd,&write_set) && fd != except.
+		-send(fd,send_buffer,strlen(send_buffer),0) == -1.
+10º Borrar funciones del main que nos dan.
+11º Revisar el numero de argumentos sea correcto.
+12º Obtener solo el sockfd, y el servaddr.
+13º bzero a clients.
+14º Aplicar FD_ZERO(&current) y FD_SET(sockfd,&current).
+15º htons(atoi(argv[1])).
+16º Cambiar el bind a == -1, y el listen cambiarlo a 100 y == -1.
+17º Bucle infinito
+	17º a-
+		1º- iniciar read_set = write_set = current.
+		2º- select(maxfd + 1, &read_set,&write_set,0,0) == -1. continue;
+	17º b-
+		1º bucle for.
+		2º if(FD_ISSET(fd,&read_set))
+		3º if(sockfd == fd)
+		4º int clientfd = accept(fd,(struct sockaddr *)&servaddr,&len);
+		5º clientfd == -1 continue;
+		6º clientfd > maxfd. maxfd = clientfd;
+		7º clients[clientfd].id = gid++;
+		8º FD_SET(clientfd,&current);
+		9º sprintf(send_buffer,"server: client %d just arrived\n",clients[clientfd].id);
+		10º send_to_all(clientfd);
+		11º break;
+
