@@ -24,12 +24,28 @@
 		1º bucle for.
 		2º if(FD_ISSET(fd,&read_set))
 		3º if(sockfd == fd)
-		4º int clientfd = accept(fd,(struct sockaddr *)&servaddr,&len);
-		5º clientfd == -1 continue;
-		6º clientfd > maxfd. maxfd = clientfd;
-		7º clients[clientfd].id = gid++;
-		8º FD_SET(clientfd,&current);
-		9º sprintf(send_buffer,"server: client %d just arrived\n",clients[clientfd].id);
-		10º send_to_all(clientfd);
-		11º break;
+			1º int clientfd = accept(fd,(struct sockaddr *)&servaddr,&len);
+			2º clientfd == -1 continue;
+			3º clientfd > maxfd. maxfd = clientfd;
+			4º clients[clientfd].id = gid++;
+			5º FD_SET(clientfd,&current);
+			6º sprintf(send_buffer,"server: client %d just arrived\n",clients[clientfd].id);
+			7º send_to_all(clientfd);
+			8º break;
+		4º int ret = recv(fd,recv_buffer,sizeof(recv_buffer), 0);
+		5º if ret <= 0
+			1º sprintf(send_buffer,"server: client %d just left\n",clients[clientfd].id);
+			2º send_to_all(clientfd);
+			3º FD_CLR(fd &current);
+			4º bzero(clients[fd].msg,strlen(clients[fd].msg));
+			5º close(fd);
+			6º break;
+		6º else
+		7º for(int i = 0, j = strlen(clients[fd].msg); i < ret; i++; j++)
+		8º if (clients[fd].msg[j] == '\n')
+			1º clients[fd].msg[j] = '\0';
+			2º sprintf(send_buffer,"client %d: %s:\n",clients[fd].id,clients[fd].msg);
+			3º send_to_all(fd);
+			4º bzero(clients[fd].msg,strlen(clients[fd].msg));
+			5º j = -1;
 
