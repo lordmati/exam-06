@@ -12,15 +12,16 @@
 10º Borrar funciones del main que nos dan.
 11º Revisar el numero de argumentos sea correcto.
 12º Obtener solo el sockfd, y el servaddr.
-13º bzero a clients.
-14º Aplicar FD_ZERO(&current) y FD_SET(sockfd,&current).
-15º htons(atoi(argv[1])).
-16º Cambiar el bind a == -1, y el listen cambiarlo a 100 y == -1.
-17º Bucle infinito
-	17º a-
+13º Crear socklen_t len = sizeof(struct sockaddr);
+14º bzero a clients.
+15º Aplicar FD_ZERO(&current) y FD_SET(sockfd,&current).
+16º htons(atoi(argv[1])).
+17º Cambiar el bind a == -1, y el listen cambiarlo a 100 y == -1.
+18º Bucle infinito
+	18º a-
 		1º- iniciar read_set = write_set = current.
 		2º- select(maxfd + 1, &read_set,&write_set,0,0) == -1. continue;
-	17º b-
+	18º b-
 		1º bucle for.
 		2º if(FD_ISSET(fd,&read_set))
 		3º if(sockfd == fd)
@@ -42,7 +43,8 @@
 			6º break;
 		6º else
 		7º for(int i = 0, j = strlen(clients[fd].msg); i < ret; i++; j++)
-		8º if (clients[fd].msg[j] == '\n')
+		8º clients[fd].msg[j] = recv_buffer[i];
+		9º if (clients[fd].msg[j] == '\n')
 			1º clients[fd].msg[j] = '\0';
 			2º sprintf(send_buffer,"client %d: %s:\n",clients[fd].id,clients[fd].msg);
 			3º send_to_all(fd);
