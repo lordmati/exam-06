@@ -46,7 +46,7 @@
 		8º clients[fd].msg[j] = recv_buffer[i];
 		9º if (clients[fd].msg[j] == '\n')
 			1º clients[fd].msg[j] = '\0';
-			2º sprintf(send_buffer,"client %d: %s:\n",clients[fd].id,clients[fd].msg);
+			2º sprintf(send_buffer,"client %d: %s\n",clients[fd].id,clients[fd].msg);
 			3º send_to_all(fd);
 			4º bzero(clients[fd].msg,strlen(clients[fd].msg));
 			5º j = -1;
